@@ -1,0 +1,27 @@
+import { Injectable, signal } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LoadingService {
+  private loadingCount = signal<number>(0);
+  public isLoading = signal<boolean>(false);
+
+  show(): void {
+    this.loadingCount.update(count => count + 1);
+    this.isLoading.set(true);
+  }
+
+  hide(): void {
+    this.loadingCount.update(count => {
+      const newCount = Math.max(0, count - 1);
+      this.isLoading.set(newCount > 0);
+      return newCount;
+    });
+  }
+
+  reset(): void {
+    this.loadingCount.set(0);
+    this.isLoading.set(false);
+  }
+}
