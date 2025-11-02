@@ -36,7 +36,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                   placeholder="John"
                   formControlName="firstName"
                   [error]="getFieldError('firstName')"
-                  required
+                  [required]="true"
                 ></ui-input>
                 
                 <ui-input
@@ -44,7 +44,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                   placeholder="Doe"
                   formControlName="lastName"
                   [error]="getFieldError('lastName')"
-                  required
+                  [required]="true"
                 ></ui-input>
               </div>
               
@@ -54,7 +54,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                 placeholder="john@company.com"
                 formControlName="email"
                 [error]="getFieldError('email')"
-                required
+                [required]="true"
               ></ui-input>
               
               <ui-input
@@ -63,7 +63,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                 placeholder="Create a password"
                 formControlName="password"
                 [error]="getFieldError('password')"
-                required
+                [required]="true"
               ></ui-input>
               
               <ui-input
@@ -72,7 +72,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                 placeholder="Confirm your password"
                 formControlName="confirmPassword"
                 [error]="getFieldError('confirmPassword')"
-                required
+                [required]="true"
               ></ui-input>
               
               <ui-button
@@ -131,7 +131,6 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
-      // Mock registration
       setTimeout(() => {
         this.router.navigate(['/auth/login']);
         this.isLoading = false;
@@ -141,7 +140,7 @@ export class RegisterComponent {
 
   getFieldError(fieldName: string): string {
     const field = this.registerForm.get(fieldName);
-    if (field?.errors && field.touched) {
+    if (field?.errors && (field.touched || field.dirty)) {
       if (field.errors['required']) {
         return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
       }

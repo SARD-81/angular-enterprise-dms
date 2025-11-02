@@ -135,13 +135,13 @@ import { AvatarComponent } from '../../../lib/components/ui/avatar.component';
             <!-- User Menu -->
             <div class="flex items-center space-x-3">
               <ui-avatar
-                [src]="currentUser()?.avatar || ''"
+                [src]="user()?.avatar || ''"
                 [fallback]="getUserInitials()"
                 className="h-8 w-8"
               ></ui-avatar>
               <div class="text-sm">
-                <p class="font-medium">{{ currentUser()?.fullName || currentUser()?.firstName + ' ' + currentUser()?.lastName }}</p>
-                <p class="text-muted-foreground text-xs">{{ currentUser()?.email }}</p>
+                <p class="font-medium">{{ user()?.fullName || user()?.firstName + ' ' + user()?.lastName }}</p>
+                <p class="text-muted-foreground text-xs">{{ user()?.email }}</p>
               </div>
               <ui-button
                 variant="ghost"
@@ -172,7 +172,10 @@ export class MainLayoutComponent {
     public themeService: ThemeService
   ) {}
 
-  currentUser = this.authService.currentUser;
+  // Use a getter to avoid TS2729 initialization ordering issues
+  get user() {
+    return this.authService.currentUser;
+  }
 
   getPageTitle(): string {
     const url = window.location.pathname;
@@ -186,9 +189,9 @@ export class MainLayoutComponent {
   }
 
   getUserInitials(): string {
-    const user = this.currentUser();
-    if (user) {
-      return AvatarComponent.getInitials(user.firstName + ' ' + user.lastName);
+    const u = this.user();
+    if (u) {
+      return AvatarComponent.getInitials(u.firstName + ' ' + u.lastName);
     }
     return 'U';
   }

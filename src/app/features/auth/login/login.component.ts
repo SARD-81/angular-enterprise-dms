@@ -38,7 +38,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                 placeholder="Enter your email"
                 formControlName="email"
                 [error]="getFieldError('email')"
-                required
+                [required]="true"
               ></ui-input>
               
               <ui-input
@@ -47,7 +47,7 @@ import { CardComponent, CardHeaderComponent, CardTitleComponent, CardDescription
                 placeholder="Enter your password"
                 formControlName="password"
                 [error]="getFieldError('password')"
-                required
+                [required]="true"
               ></ui-input>
               
               <ui-button
@@ -80,7 +80,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private authServiceSvc: AuthService,
     private router: Router,
     private notificationService: NotificationService
   ) {
@@ -95,7 +95,6 @@ export class LoginComponent {
       this.isLoading = true;
       const credentials = this.loginForm.value;
       
-      // Mock login for demo purposes
       setTimeout(() => {
         const mockResponse = {
           token: 'mock-jwt-token',
@@ -112,10 +111,9 @@ export class LoginComponent {
             createdAt: new Date(),
             updatedAt: new Date()
           }
-        };
+        } as any;
         
-        // Simulate API call
-        this.authService['setSession'](mockResponse);
+        (this.authServiceSvc as any).setSession(mockResponse);
         this.notificationService.success('Login successful', 'Welcome back!');
         this.router.navigate(['/dashboard']);
         this.isLoading = false;
@@ -125,7 +123,7 @@ export class LoginComponent {
 
   getFieldError(fieldName: string): string {
     const field = this.loginForm.get(fieldName);
-    if (field?.errors && field.touched) {
+    if (field?.errors && (field.touched || field.dirty)) {
       if (field.errors['required']) {
         return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
       }
